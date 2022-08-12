@@ -1,14 +1,8 @@
 import "./loadEnvironment";
-import express from "express";
-import Debug from "debug";
-import chalk from "chalk";
+import startServer from "./server/startServer";
 
-const debug = Debug("robots:index");
+const port = +process.env.PORT ?? 4000;
 
-const app = express();
-
-const port = process.env.PORT ?? 4000;
-
-app.listen(port, () => {
-  debug(chalk.blue(`Server listening on ${port}`));
-});
+(async () => {
+  startServer(port);
+})();
