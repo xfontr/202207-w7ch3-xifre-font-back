@@ -1,9 +1,9 @@
 import "./loadEnvironment";
 import { connectDB, startServer } from "./server/startServer";
 
-const port = +process.env.PORT ?? 4000;
-
 const mongoUrl = "";
+
+const port = +process.env.PORT ?? 4000;
 
 (async () => {
   startServer(port);
