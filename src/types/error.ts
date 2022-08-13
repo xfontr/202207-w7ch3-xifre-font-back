@@ -1,5 +1,5 @@
 interface CustomError extends Error {
-  errorStatus: number;
+  statusCode: number;
   errorMessage: string;
 }
 
