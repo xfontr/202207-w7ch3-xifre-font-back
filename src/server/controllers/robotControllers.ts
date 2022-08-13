@@ -10,12 +10,18 @@ export const getAllRobots = async (
   res: Response,
   next: NextFunction
 ) => {
-  const robots = await Robot.find({});
-
-  debug("Delivering all robots");
-  res.status(200).json(robots);
-
-  next();
+  try {
+    const robots = await Robot.find({});
+    debug("Delivering all robots");
+    res.status(200).json(robots);
+    next();
+  } catch {
+    const error = createCustomError(
+      404,
+      "Could not fetch robots from database"
+    );
+    next(error);
+  }
 };
 
 export const getRobot = async (
