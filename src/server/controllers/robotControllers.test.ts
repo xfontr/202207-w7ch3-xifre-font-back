@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Robot from "../../database/models/Robots";
+import createCustomError from "../../utils/createCustomError";
 import { getAllRobots, getRobot } from "./robotControllers";
 
 describe("Given a robotControllers controller", () => {
@@ -56,12 +57,41 @@ describe("Given a function getRobot", () => {
       } as Partial<Response>;
 
       const next = jest.fn() as Partial<NextFunction>;
-      Robot.find = jest.fn();
+      Robot.find = jest.fn().mockReturnValue([
+        {
+          id: "1",
+          name: "",
+          img: "",
+          creationDate: "",
+          speed: 0,
+          endurance: 0,
+        },
+      ]);
 
       await getRobot(req as Request, res as Response, next as NextFunction);
       const status = 200;
 
       expect(res.status).toBeCalledWith(status);
+    });
+
+    test("It should return an error if there are no robots", async () => {
+      const req = {
+        params: "" as unknown,
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      const next = jest.fn() as Partial<NextFunction>;
+      Robot.find = jest.fn().mockReturnValue([]);
+
+      await getRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toBeCalledWith(
+        createCustomError(404, "No robots found by the chosen id")
+      );
     });
 
     test("And it should invoke the 'json' method and return one specific robot", async () => {
