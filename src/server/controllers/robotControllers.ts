@@ -43,3 +43,30 @@ export const getRobot = async (
 
   next();
 };
+
+export const deleteRobot = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { idRobot } = req.params;
+  debug(`trying to delete robot with id ${idRobot}`);
+  try {
+    const robot = await Robot.find({ _id: idRobot });
+
+    if (robot.length === 0) {
+      next(createCustomError(404, "No robots found by the chosen id"));
+      return;
+    }
+
+    await Robot.deleteOne({ _id: idRobot });
+    debug(`Deleted robot with ID ${idRobot}`);
+    await res
+      .status(200)
+      .json({ message: `Succesfully deleted the robot with ID ${idRobot}` });
+    next();
+  } catch {
+    const error = createCustomError(404, `Something went wrong`);
+    next(error);
+  }
+};

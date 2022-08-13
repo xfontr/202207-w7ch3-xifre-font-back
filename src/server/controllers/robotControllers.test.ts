@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Robot from "../../database/models/Robots";
 import createCustomError from "../../utils/createCustomError";
-import { getAllRobots, getRobot } from "./robotControllers";
+import { deleteRobot, getAllRobots, getRobot } from "./robotControllers";
 
 describe("Given a robotControllers controller", () => {
   describe("When function getAllRobots is called with a response and a request as arguments", () => {
@@ -144,6 +144,80 @@ describe("Given a function getRobot", () => {
       await getRobot(req as Request, res as Response, next as NextFunction);
 
       expect(res.json).toHaveBeenCalledWith([mockRobots[0]]);
+    });
+  });
+});
+
+describe("Given a function deleteRobot", () => {
+  describe("When called with a request, a response and a next function as parameters", () => {
+    test("It should invoke the response 'status' method with '200'", async () => {
+      const req = {} as Partial<Request>;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+      const next = jest.fn() as Partial<NextFunction>;
+
+      Robot.find = jest.fn();
+      Robot.deleteOne = jest.fn();
+      await getAllRobots(req as Request, res as Response, next as NextFunction);
+      const status = 200;
+      expect(res.status).toBeCalledWith(status);
+    });
+
+    test("And it should invoke the json method with a message", async () => {
+      const req = {
+        params: { idRobot: "1" } as any,
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      const next = jest.fn() as Partial<NextFunction>;
+
+      const mockRobots = [
+        {
+          id: "1",
+          name: "",
+          img: "",
+          creationDate: "",
+          speed: 0,
+          endurance: 0,
+        },
+      ];
+
+      const { idRobot } = req.params;
+      const message = {
+        message: `Succesfully deleted the robot with ID ${idRobot}`,
+      };
+      Robot.find = jest
+        .fn()
+        .mockReturnValue(mockRobots.filter((robot) => robot.id === idRobot));
+      Robot.deleteOne = jest.fn().mockReturnValue(1);
+      await deleteRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(res.json).toHaveBeenCalledWith(message);
+    });
+
+    test("And if there is an error in the process, we should send an error", async () => {
+      const error = createCustomError(404, `Something went wrong`);
+      const req = {
+        params: { idRobot: "1" } as any,
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      const next = jest.fn() as Partial<NextFunction>;
+      Robot.find = jest.fn().mockRejectedValue(new Error("error"));
+      Robot.deleteOne = jest.fn().mockReturnValue(1);
+      await deleteRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
