@@ -3,6 +3,7 @@ import express from "express";
 import Debug from "debug";
 import chalk from "chalk";
 import mongoose from "mongoose";
+import cors from "cors";
 import robotsRouter from "./routers/robotsRouter";
 
 const debug = Debug("robots:startServer");
@@ -11,6 +12,8 @@ const app = express();
 
 export const startServer = (port: number): Promise<unknown> =>
   new Promise((resolve, reject) => {
+    app.use(cors());
+    app.use(express.json());
     const server = app.listen(port, () => {
       debug(chalk.blue(`Server listening on ${port}`));
       resolve(true);
