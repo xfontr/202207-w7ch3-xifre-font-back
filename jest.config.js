@@ -3,7 +3,8 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   collectCoverageFrom: [
-    "!src/index.tsx",
+    "src",
+    "!src/index.ts",
     "!src/server/index.ts",
     "!src/server/startServer.ts",
   ],
