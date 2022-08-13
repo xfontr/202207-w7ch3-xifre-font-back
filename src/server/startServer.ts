@@ -5,7 +5,7 @@ import chalk from "chalk";
 import mongoose from "mongoose";
 import robotsRouter from "./routers/robotsRouter";
 
-const debug = Debug("robots:start");
+const debug = Debug("robots:startServer");
 
 const app = express();
 
