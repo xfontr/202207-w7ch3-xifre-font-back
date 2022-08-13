@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Robot from "../../database/models/Robots";
+import createCustomError from "../../utils/createCustomError";
 import { getAllRobots, getRobot } from "./robotControllers";
 
 describe("Given a robotControllers controller", () => {
@@ -39,6 +40,24 @@ describe("Given a robotControllers controller", () => {
       await getAllRobots(req as Request, res as Response, next as NextFunction);
 
       expect(res.json).toHaveBeenCalledWith(mockRobots);
+    });
+
+    test("And if there is an error in the process, we should send an error", async () => {
+      const error = createCustomError(
+        404,
+        "Could not fetch robots from database"
+      );
+      const req = {} as Partial<Request>;
+      Robot.find = jest.fn().mockRejectedValue(new Error(""));
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+      const next = jest.fn() as Partial<NextFunction>;
+
+      await getAllRobots(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
