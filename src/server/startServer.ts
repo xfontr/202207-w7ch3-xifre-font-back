@@ -3,6 +3,7 @@ import express from "express";
 import Debug from "debug";
 import chalk from "chalk";
 import mongoose from "mongoose";
+import robotsRouter from "./routers/robotsRouter";
 
 const debug = Debug("robots:start");
 
@@ -15,6 +16,8 @@ export const startServer = (port: number): Promise<unknown> =>
       resolve(true);
     });
 
+    app.use("/robots", robotsRouter);
+
     server.on("error", (error) => {
       debug(chalk.red(`Error connecting to the database: ${error.message}`));
       reject(error);
@@ -25,7 +28,7 @@ export const connectDB = (url: string): Promise<unknown> =>
   new Promise((resolve, reject) => {
     mongoose.connect(url, (error) => {
       if (error) {
-        debug(chalk.red("Error while trying to connec to the Database"));
+        debug(chalk.red("Error while trying to connect to the Database"));
         reject(error);
         return;
       }
