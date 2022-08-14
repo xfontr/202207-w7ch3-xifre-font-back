@@ -12,6 +12,7 @@ export const getAllRobots = async (
 ) => {
   try {
     const robots = await Robot.find({});
+
     debug("Delivering all robots");
     res.status(200).json(robots);
     next();
@@ -71,4 +72,18 @@ export const deleteRobot = async (
     const error = createCustomError(404, `Something went wrong`);
     next(error);
   }
+};
+
+export const createRobot = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const newRobot = new Robot(req.body);
+  debug(req.body);
+
+  await newRobot.save();
+  res.status(200).json({ newRobot });
+
+  next();
 };

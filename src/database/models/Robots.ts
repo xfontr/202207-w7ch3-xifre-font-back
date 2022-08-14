@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const robotSchema = new Schema({
-  _id: { type: mongoose.SchemaTypes.ObjectId },
   name: {
     type: String,
     require: true,
