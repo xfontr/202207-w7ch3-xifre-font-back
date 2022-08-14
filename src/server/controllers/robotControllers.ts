@@ -81,8 +81,9 @@ export const createRobot = async (
 ) => {
   const newRobot = new Robot(req.body);
   debug(req.body);
-  await newRobot.save();
 
+  await newRobot.save();
   res.status(200).json({ newRobot });
+
   next();
 };
