@@ -31,15 +31,15 @@ export const getRobot = async (
 ) => {
   const { idRobot } = req.params;
 
-  const robots = await Robot.find({ _id: idRobot });
+  const robot = await Robot.findById(idRobot);
 
-  if (robots.length === 0) {
-    next(createCustomError(404, "No robots found by the chosen id"));
+  if (!robot) {
+    next(createCustomError(404, "No robot found by the chosen id"));
     return;
   }
 
   debug(`Delivering the robot with ID ${idRobot}`);
-  await res.status(200).json(robots);
+  res.status(200).json(robot);
 
   next();
 };
@@ -50,7 +50,8 @@ export const deleteRobot = async (
   next: NextFunction
 ) => {
   const { idRobot } = req.params;
-  debug(`trying to delete robot with id ${idRobot}`);
+  debug(`Trying to delete robot with id ${idRobot}`);
+
   try {
     const robot = await Robot.find({ _id: idRobot });
 
@@ -61,7 +62,8 @@ export const deleteRobot = async (
 
     await Robot.deleteOne({ _id: idRobot });
     debug(`Deleted robot with ID ${idRobot}`);
-    await res
+
+    res
       .status(200)
       .json({ message: `Succesfully deleted the robot with ID ${idRobot}` });
     next();
