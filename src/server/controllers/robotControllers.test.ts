@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import Robot from "../../database/models/Robots";
+import Robot from "../../database/models/Robot";
 import createCustomError from "../../utils/createCustomError";
 import {
   createRobot,

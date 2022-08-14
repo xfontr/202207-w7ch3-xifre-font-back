@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Debug from "debug";
-import Robot from "../../database/models/Robots";
+import Robot from "../../database/models/Robot";
 import createCustomError from "../../utils/createCustomError";
 
 const debug = Debug("robots:robotControllers");
@@ -61,7 +61,7 @@ export const deleteRobot = async (
       return;
     }
 
-    Robot.deleteOne({ _id: idRobot });
+    await Robot.deleteOne({ _id: idRobot });
     debug(`Deleted robot with ID ${idRobot}`);
 
     res
@@ -82,7 +82,7 @@ export const createRobot = async (
   const newRobot = new Robot(req.body);
   debug(req.body);
 
-  newRobot.save();
+  await newRobot.save();
   res.status(200).json({ newRobot });
 
   next();
