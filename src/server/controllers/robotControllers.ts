@@ -61,7 +61,7 @@ export const deleteRobot = async (
       return;
     }
 
-    await Robot.deleteOne({ _id: idRobot });
+    Robot.deleteOne({ _id: idRobot });
     debug(`Deleted robot with ID ${idRobot}`);
 
     res
@@ -82,7 +82,7 @@ export const createRobot = async (
   const newRobot = new Robot(req.body);
   debug(req.body);
 
-  await newRobot.save();
+  newRobot.save();
   res.status(200).json({ newRobot });
 
   next();
