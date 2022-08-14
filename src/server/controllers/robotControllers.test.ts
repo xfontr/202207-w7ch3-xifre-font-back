@@ -75,7 +75,7 @@ describe("Given a function getRobot", () => {
       } as Partial<Response>;
 
       const next = jest.fn() as Partial<NextFunction>;
-      Robot.find = jest.fn().mockReturnValue([
+      Robot.findById = jest.fn().mockReturnValue([
         {
           id: "1",
           name: "",
@@ -103,12 +103,12 @@ describe("Given a function getRobot", () => {
       } as Partial<Response>;
 
       const next = jest.fn() as Partial<NextFunction>;
-      Robot.find = jest.fn().mockReturnValue([]);
+      Robot.findById = jest.fn().mockReturnValue(undefined);
 
       await getRobot(req as Request, res as Response, next as NextFunction);
 
       expect(next).toBeCalledWith(
-        createCustomError(404, "No robots found by the chosen id")
+        createCustomError(404, "No robot found by the chosen id")
       );
     });
 
@@ -137,7 +137,7 @@ describe("Given a function getRobot", () => {
 
       const { idRobot } = req.params;
 
-      Robot.find = jest
+      Robot.findById = jest
         .fn()
         .mockReturnValue(mockRobots.filter((robot) => robot.id === idRobot));
 

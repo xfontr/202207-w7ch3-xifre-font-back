@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const robotsSchema = new Schema({
+const robotSchema = new Schema({
+  _id: { type: mongoose.SchemaTypes.ObjectId },
   name: {
     type: String,
     require: true,
@@ -25,6 +26,6 @@ const robotsSchema = new Schema({
   },
 });
 
-const Robot = mongoose.model("Robot", robotsSchema, "robots");
+const Robot = mongoose.model("Robot", robotSchema, "robots");
 
 export default Robot;
