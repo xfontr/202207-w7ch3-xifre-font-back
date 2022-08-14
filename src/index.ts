@@ -1,6 +1,7 @@
 import "./loadEnvironment";
 import cors from "cors";
 import express from "express";
+import morgan from "morgan";
 import { connectDB, startServer } from "./server/startServer";
 import app from "./loadApp";
 import robotsRouter from "./server/routers/robotsRouter";
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/robots", robotsRouter);
+app.use(morgan("dev"));
 
 (async () => {
   try {
