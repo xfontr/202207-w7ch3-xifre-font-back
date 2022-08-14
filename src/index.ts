@@ -1,5 +1,4 @@
 import "./loadEnvironment";
-import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { connectDB, startServer } from "./server/startServer";
@@ -10,7 +9,6 @@ const mongoUrl = process.env.DATABASE;
 
 const port = +process.env.PORT ?? 4000;
 
-app.use(cors());
 app.use(express.json());
 
 app.use("/robots", robotsRouter);
