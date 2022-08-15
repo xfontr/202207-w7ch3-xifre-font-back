@@ -87,3 +87,26 @@ export const createRobot = async (
 
   next();
 };
+
+export const updateRobot = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const newRobot = req.body;
+    debug(newRobot);
+    const { _id: id } = newRobot;
+    await Robot.findByIdAndUpdate(id, {
+      name: newRobot.name,
+      image: newRobot.image,
+      creationDate: newRobot.creationDate,
+      speed: newRobot.speed,
+      endurance: newRobot.endurance,
+    });
+    res.status(200).json({ newRobot });
+  } catch (error) {
+    const customError = createCustomError(404, "Something went wrong");
+    next(customError);
+  }
+};
