@@ -6,6 +6,7 @@ import {
   deleteRobot,
   getAllRobots,
   getRobot,
+  updateRobot,
 } from "./robotControllers";
 
 jest.mock("./robotControllers", () => ({
@@ -277,6 +278,98 @@ describe("Given a createRobot function", () => {
       await createRobot(req as Request, res as Response, next as NextFunction);
 
       expect(res.json).toHaveBeenCalled();
+    });
+  });
+});
+
+describe("Given a updateRobot function", () => {
+  describe("When called with a response and a request as arguments", () => {
+    test("It should call the response 'status' method with 200", async () => {
+      const mockRobot = {
+        _id: "0",
+        name: "",
+        image: "",
+        creationDate: "",
+        speed: 0,
+        endurance: 0,
+        __v: 0,
+      };
+      const req = {
+        body: mockRobot,
+      } as Partial<Request>;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      Robot.findByIdAndUpdate = jest.fn();
+
+      const next = jest.fn() as Partial<NextFunction>;
+      const status = 200;
+
+      await updateRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(res.status).toBeCalledWith(status);
+    });
+
+    test("And it should call the res 'json' method and return the updated robot", async () => {
+      const mockRobot = {
+        _id: "0",
+        name: "",
+        image: "",
+        creationDate: "",
+        speed: 0,
+        endurance: 0,
+        __v: 0,
+      };
+      const finalRobot = {
+        newRobot: mockRobot,
+      };
+      const req = {
+        body: mockRobot,
+      } as Partial<Request>;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      Robot.findByIdAndUpdate = jest.fn();
+
+      const next = jest.fn() as Partial<NextFunction>;
+
+      await updateRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(res.json).toBeCalledWith(finalRobot);
+    });
+
+    test("And if there is an error in the process, we should send an error", async () => {
+      const error = createCustomError(404, "Something went wrong");
+
+      const mockRobot = {
+        _id: "0",
+        name: "",
+        image: "",
+        creationDate: "",
+        speed: 0,
+        endurance: 0,
+        __v: 0,
+      };
+
+      const req = {
+        body: mockRobot,
+      } as Partial<Request>;
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      Robot.findByIdAndUpdate = jest.fn().mockRejectedValue(new Error(""));
+
+      const next = jest.fn() as Partial<NextFunction>;
+
+      await updateRobot(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
