@@ -13,20 +13,20 @@ const authentication = (
   next: NextFunction
 ) => {
   const dataAuthentication = req.get("Authorization");
-
+  debugger;
   if (!dataAuthentication || !dataAuthentication.startsWith("Bearer")) {
-    const error = createCustomError(400, "Bad request", "Authentication Error");
+    const error = createCustomError(500, "Bad request", "Authentication Error");
     next(error);
     return;
   }
 
   const token = dataAuthentication.slice(7);
-
+  debugger;
   const tokenData = verifyToken(token);
-
+  debugger;
   if (typeof tokenData === "string") {
     const error = createCustomError(
-      400,
+      500,
       "Invalid token",
       "Authentication Error"
     );
